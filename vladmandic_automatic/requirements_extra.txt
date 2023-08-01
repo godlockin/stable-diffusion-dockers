@@ -1,0 +1,5 @@
+git+https://github.com/patrickvonplaten/invisible-watermark.git@remove_onnxruntime_depedency 
+git+https://github.com/openai/CLIP.git
+onnxruntime
+tensorflow
+pi-heif

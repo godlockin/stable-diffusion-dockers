@@ -1,0 +1,9 @@
+open-clip-torch
+bitsandbytes
+tensorboard
+accelerate
+tensorflow
+mediapipe
+tensorrt
+xformers
+onnx
