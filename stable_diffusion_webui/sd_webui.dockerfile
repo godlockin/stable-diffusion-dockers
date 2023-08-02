@@ -1,5 +1,11 @@
 FROM lockinwu/sd_base_image:v1 as base
 
+LABEL author="stevenchenworking@gmail.com"
+ENV PATH="$PATH:/home/root/.local/bin" \
+    DEBIAN_FRONTEND=noninteractive \
+    TZ=Asia/Shanghai \
+    PYTHONUNBUFFERED=1
+
 # Create workspace working directory
 WORKDIR /
 
@@ -45,5 +51,5 @@ COPY ui-config.json \
 
 # Set up the container startup script
 WORKDIR /stable-diffusion-webui
-
+STOPSIGNAL SIGINT
 CMD [ "bash", "start.sh" ]

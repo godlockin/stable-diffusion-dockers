@@ -1,4 +1,8 @@
+# Stage 1: Base
 FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04 as base
+
+# Setup base environment
+LABEL author="stevenchenworking@gmail.com"
 
 SHELL ["/bin/bash", "-c"]
 ENV DEBIAN_FRONTEND=noninteractive \
@@ -8,7 +12,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 # Create workspace working directory
 WORKDIR /
 
-# Install Ubuntu packages
+# Stage 2: Install Ubuntu system level packages
 RUN apt update && \
     apt -y upgrade && \
     apt install -y --no-install-recommends \

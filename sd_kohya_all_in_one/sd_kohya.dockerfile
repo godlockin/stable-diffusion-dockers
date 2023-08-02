@@ -1,10 +1,16 @@
 # Stage 1: Base
 FROM lockinwu/sd_base_image:v1 as base
 
+LABEL author="stevenchenworking@gmail.com"
+ENV PATH="$PATH:/home/root/.local/bin" \
+    DEBIAN_FRONTEND=noninteractive \
+    TZ=Asia/Shanghai \
+    PYTHONUNBUFFERED=1
+
 # Create workspace working directory
 WORKDIR /
 
-# cp related files
+# Copy related files
 COPY requirements_extra_kohya.txt \
      requirements_dreambooth.txt \
      requirements_versions.txt \
@@ -12,7 +18,7 @@ COPY requirements_extra_kohya.txt \
      accelerate.yaml \
      /dependencies/
 
-# setup stable diffusion base env
+# Setup base projects
 RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git && \
     git clone https://github.com/toshiaki1729/stable-diffusion-webui-dataset-tag-editor /stable-diffusion-webui/extensions/stable-diffusion-webui-dataset-tag-editor &&\
     git clone https://github.com/a2569875/stable-diffusion-webui-composable-lora /stable-diffusion-webui/extensions/stable-diffusion-webui-composable-lora &&\
@@ -29,10 +35,10 @@ RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git && \
     git clone https://github.com/Mikubill/sd-webui-controlnet.git /stable-diffusion-webui/extensions/sd-webui-controlnet && \
     git clone https://github.com/volotat/SD-CN-Animation /stable-diffusion-webui/extensions/SD-CN-Animation &&\
     git clone https://github.com/s0md3v/sd-webui-roop /stable-diffusion-webui/extensions/sd-webui-roop &&\
-    # init kohya
     git clone https://github.com/bmaltais/kohya_ss.git /kohya_ss
 
-# init stable diffusion webui
+# Stage 2: Setup all projects
+# Install stable diffusion webui
 WORKDIR /stable-diffusion-webui
 RUN python3 -m venv --system-site-packages venv && \
     source venv/bin/activate && \
@@ -73,12 +79,13 @@ RUN pip3 install jupyterlab \
     jupyter contrib nbextension install --user && \
     jupyter nbextension enable --py widgetsnbextension
 
+# Stage 3: Setup dependent files
 COPY ui-config.json \
      config.json \
      /stable-diffusion-webui/
 COPY start.sh /
 
-# Set up the container startup script
+# Stage 4: Execute startup script
 WORKDIR /
-
+STOPSIGNAL SIGINT
 CMD [ "bash", "/start.sh" ]
