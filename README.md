@@ -1,3 +1,4 @@
+# Introduction
 The docker files for stable diffusion related webui
 
 |Name|Reference project|Docker image|Dockerfile|Description|Comments|
@@ -15,7 +16,7 @@ The docker files for stable diffusion related webui
 |Stable Diffusion WebUI + Kohya_ss WebUI + Jupyter all in one|-|docker pull lockinwu/sd_kohya_all_in_one:v3|[sd_kohya.dockerfile](https://github.com/godlockin/stable-diffusion-dockers/blob/miao/sd_kohya_all_in_one/sd_kohya.dockerfile)|Built the stable diffusion webui + kohya_ss webui + jupyter into one image, open the port `8080` for stable diffusion webui, `8081` for kohya_ss, `8082` for tensorboard, `8083` for jupyter. The default token for jupter is `steven`.|-|
 |Stable Diffusion WebUI + Kohya_ss WebUI + Jupyter all in one with model|-|docker pull lockinwu/sd_kohya_all_in_one_w_model:v1.5|[sd_kohya_w_model.dockerfile](https://github.com/godlockin/stable-diffusion-dockers/blob/miao/sd_kohya_all_in_one/sd_kohya_w_model.dockerfile)|Mount the stable diffusion v1.5 at `/stable-diffusion-webui/models/Stable-diffusion/` and VAE model at `/stable-diffusion-webui/models/VAE`|-|
 
-Additional environment variables for images:
+# Additional parameters
 |Image|Variable|Usage|Describe|Default|
 |:-:|:-:|:-:|:-:|:-:|
 |Stable diffusion webui|`PORT`|`docker -e PORT=8080`|set the listen port|`8080`|
@@ -33,3 +34,54 @@ Additional environment variables for images:
 |-|`PUBLIC_KEY`|`docker -e PUBLIC_KEY=Abcd1234`|set the public key for ssh| not set |
 |-|`DISABLE_JUPYTER`|`docker -e DISABLE_JUPYTER=1`|disable the jupyter|`0`: enabled jupyter|
 |-|`JUPYTER_PASSWORD`|`docker -e JUPYTER_PASSWORD=steven`|set the jupyer's token|`steven`|
+
+# Bootstrap
+Base commend
+```bash
+docker run --gpus all -it --rm --privileged \
+    --ulimit memlock=-1 --ulimit stack=67108864 \
+    --name=test \
+```
+
+Stable diffusion webui
+```bash
+docker run --gpus all -it --rm --privileged \
+    -p 8080:8080 \
+    --ulimit memlock=-1 --ulimit stack=67108864 \
+    -v /path/to/model/Stable-diffusion:/stable-diffusion-webui/models/ \
+    --name=test \
+    lockinwu/stable_diffusion_webui:v1
+```
+
+Stable diffusion webui with model
+```bash
+docker run --gpus all -it --rm --privileged \
+    -p 8080:8080 \
+    --ulimit memlock=-1 --ulimit stack=67108864 \
+    --name=test \
+    lockinwu/stable_diffusion_webui_w_model:v1.5
+```
+
+Stable diffusion webui with model with customized port
+```bash
+docker run --gpus all -it --rm --privileged \
+    -p 8080:8081 \
+    --ulimit memlock=-1 --ulimit stack=67108864 \
+    -e PORT=8081 \
+    --name=test \
+    lockinwu/stable_diffusion_webui_w_model:v1.5
+```
+
+(Others omissions)
+All in one
+```bash
+docker run --gpus all -it --rm --privileged \
+    -p 8080:8080 -p 8081:8081 -p 8082:8082 -p 8083:8083 \
+    --ulimit memlock=-1 --ulimit stack=67108864 \
+    -v /path/to/stable_diffusion_models/:/stable-diffusion-webui/models/ \
+    -v /path/to/stable_diffusion_extension_controlnet_downloaded_models/:/stable-diffusion-webui/extensions/sd-webui-controlnet/annotator/downloads \
+    -v /path/to/stable_diffusion_extensions/:/stable-diffusion-webui/extensions/ \
+    -v /path/to/.ifnude/detector.onnx:/root/.ifnude/detector.onnx \
+    --name=sd_all_in_one \
+    lockinwu/sd_kohya_all_in_one:v3
+```
