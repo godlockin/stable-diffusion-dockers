@@ -76,10 +76,10 @@
     "training_enable_tensorboard": false,
     "training_tensorboard_save_images": false,
     "training_tensorboard_flush_every": 120,
-    "sd_model_checkpoint": "AnythingV5Ink_v32Ink.safetensors [a1535d0a42]",
+    "sd_model_checkpoint": "sd_xl_base_1.0.safetensors [31e35c80fc]",
     "sd_checkpoint_cache": 0,
     "sd_vae_checkpoint_cache": 0,
-    "sd_vae": "Automatic",
+    "sd_vae": ""sdxl_vae.safetensors,
     "sd_vae_as_default": true,
     "sd_unet": "Automatic",
     "inpainting_mask_weight": 1.0,
@@ -158,6 +158,7 @@
     "keyedit_move": true,
     "quicksettings_list": [
         "sd_model_checkpoint"
+	,"sd_vae"
     ],
     "ui_tab_order": [
         "txt2img",
